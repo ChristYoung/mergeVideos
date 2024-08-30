@@ -20,11 +20,28 @@ function generateFileList () {
     fs.writeFileSync(fileListPath, files, 'utf8');
 }
 
+// 显示加载动画
+function showLoading () {
+    const frames = ['-', '\\', '|', '/'];
+    let i = 0;
+
+    return setInterval(() => {
+        process.stdout.write(`\rMerging videos... ${frames[i++]}`);
+        i %= frames.length;
+    }, 100);
+}
+
+
 // 运行FFmpeg命令合并视频
 function mergeVideos () {
+    generateFileList();
+
+    const loadingInterval = showLoading();
+
     const ffmpegCmd = `ffmpeg -f concat -safe 0 -i ${txtFileName} -c copy ${outputVideo}`;
 
     exec(ffmpegCmd, (error, stdout, stderr) => {
+        clearInterval(loadingInterval);
         if (error) {
             console.error(`Error: ${error.message}`);
             return;
@@ -42,5 +59,4 @@ function mergeVideos () {
 }
 
 // 执行
-generateFileList();
 mergeVideos();
