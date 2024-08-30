@@ -1,0 +1,19 @@
+{
+  "name": "video-merger-cli",
+  "version": "1.0.0",
+  "description": "A simple CLI tool to merge video files using FFmpeg.",
+  "main": "bin/merge-videos.js",
+  "bin": {
+    "merge-videos": "./bin/merge-videos.js"
+  },
+  "scripts": {},
+  "keywords": [
+    "video",
+    "merge",
+    "ffmpeg",
+    "cli"
+  ],
+  "author": "Jay Young (858851768@qq.com)",
+  "license": "MIT",
+  "dependencies": {}
+}
