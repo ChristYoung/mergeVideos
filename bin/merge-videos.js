@@ -31,17 +31,33 @@ function showLoading () {
     }, 100);
 }
 
+function Main () {
+    const loadingInterval = showLoading();
+    // 实现将.ts文件转换为.mp4文件的功能
+    fs.readdir(videoDir, (err, files) => {
+        if (err) throw err;
+        files.forEach(file => {
+            if (file.endsWith('.ts') || file.endsWith('.TS')) {
+                const input = path.join(videoDir, file);
+                const output = path.join(videoDir, file.replace('.ts', '.mp4').replace('.TS', '.mp4'));
+                fs.rename(input, output, (err) => {
+                    if (err) throw err;
+                    console.log(`${input} has been renamed to ${output}`);
+                })
+            }
+        });
+        mergeVideos();
+        clearInterval(loadingInterval);
+    });
+}
+
 
 // 运行FFmpeg命令合并视频
 function mergeVideos () {
     generateFileList();
-
-    const loadingInterval = showLoading();
-
     const ffmpegCmd = `ffmpeg -f concat -safe 0 -i ${txtFileName} -c copy ${outputVideo}`;
 
     exec(ffmpegCmd, (error, stdout, stderr) => {
-        clearInterval(loadingInterval);
         if (error) {
             console.error(`Error: ${error.message}`);
             return;
@@ -59,4 +75,4 @@ function mergeVideos () {
 }
 
 // 执行
-mergeVideos();
+Main();
